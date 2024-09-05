@@ -3,6 +3,7 @@ use Ratchet\MessageComponentInterface;
 use Ratchet\ConnectionInterface;
 
 require_once("EnlRsa.php");
+require_once("ValidateMsg.php");
 
 class WebSocketServer implements MessageComponentInterface {
     protected $clients;
@@ -58,6 +59,7 @@ class WebSocketServer implements MessageComponentInterface {
         //file_put_contents( __DIR__ ."/debug.log", "Hello");       
         
         $password = 'backend219';
+        
         $uri = $conn->httpRequest->getUri();
         parse_str($uri->getQuery(), $params);
         $clientPassword = $params['room'];
@@ -69,7 +71,6 @@ class WebSocketServer implements MessageComponentInterface {
 
         if( !file_exists($session)){
             $path = $this->search_file( __DIR__ . "/../" , $session);
-            file_put_contents( __DIR__ ."/debug.log", $path . " " . $session);
             die("Session File not exist !!!");
         }
 
@@ -78,23 +79,17 @@ class WebSocketServer implements MessageComponentInterface {
             $decryptedClientPassword = $enlAes->decryptAES($clientPassword, $aesKey);
             $decryptedClientLogin = $enlAes->decryptAES($clientLogin, $aesKey);
         }catch(Exception $e){
-            file_put_contents( __DIR__ ."/debug.log", $e);
             echo $e;
             die();
         }
 
-        /*
-        try{
-            file_put_contents( __DIR__ ."/debug.log", $decryptedClientPassword . " ============= " . $clientPassword . " -------- " . $session);
-        }catch(Exception $e){
-            file_put_contents( __DIR__ ."/debug.log", $e);
-            echo $e;
-        }
-            */
-
         if ($decryptedClientPassword !== $password) {
             $conn->close();
+            unlink($session);
             return;
+        }else{
+            $session = __DIR__ . "/../sessions/" . $session;
+            unlink($session);
         }
 
 
@@ -104,8 +99,6 @@ class WebSocketServer implements MessageComponentInterface {
                 return;
             }            
         }
-
-        file_put_contents( __DIR__ ."/debug2.log", $clientLogin);
 
         if( empty($clientLogin) ){
             $clientId = uniqid('client_');
@@ -137,7 +130,7 @@ class WebSocketServer implements MessageComponentInterface {
 
     public function formatXmlData($xml) {
         $dom = new DOMDocument();
-        $dom->formatOutput = true; // Enable pretty printing
+        $dom->formatOutput = true; 
         $dom->loadXML($xml);
         return $dom->saveXML();
     }
@@ -167,6 +160,24 @@ class WebSocketServer implements MessageComponentInterface {
         echo "<pre><code>";
         echo htmlspecialchars( $this->formatXmlData($msg) ); 
         echo "</code></pre>";
+
+        $validateMsg = new ValidateMsg();
+        $validator = new ValidateMsg();
+
+        $msg = "<tb>Przykładowa wiadomość</tb>";
+
+        if ($validator->validateLength($msg, 1024)) {
+            // Send back lenght err
+        } else {
+            
+        }
+
+        if ($validator->validateStartEnd($msg, '<tb>', '</tb>')) {
+            // Send back struct not support
+        } else {
+
+        }
+        //... more validate
 
         $this->simpleConn($from, $msg);
     }

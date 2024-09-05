@@ -10,3 +10,9 @@ git commit -m "edit readme"
 git branch -M main
 git remote add origin git@github-chatroom407:chatroom407/server.git
 git push -u origin main
+
+git add .
+git commit -m "session cleaner and simple Validate"
+git branch -M main
+git remote add origin git@github-chatroom407:chatroom407/server.git
+git push -u origin main
