@@ -1,38 +1,36 @@
 # Room
 Room is a websocket application that prioritizes privacy. We have developed a unique feature called "Hide Room" on each server, ensuring that communication remains end-to-end encrypted. Our concept revolves around the idea of impermanence, where each Room is created with a temporary lifespan. This approach represents a significant improvement over the conventional notion of "Total burn," ensuring enhanced security and privacy for our users.
 
-## Outer Libs:
-Ratchet     - Websockets
-JSencrypt   - RSA client to client 
-Forge       - RSA php to client server login (session)
-Php openssl - RSA server
+## Outer Libraries:
+- **Ratchet**: Websockets
+- **JSencrypt**: RSA client-to-client encryption
+- **Forge**: RSA PHP to client-server login (session)
+- **PHP OpenSSL**: RSA server-side encryption
 
-## Own libraries: Maybe in future:
-ModuloMath
-PrimaryTestLib
-AES 
-RSA 
-Ws (websocket)
+## Own Libraries (Maybe in future):
+- ModuloMath
+- PrimaryTestLib
+- AES
+- RSA
+- Ws (websocket)
 
 ### Functionality
-+ 1. Hub comunication for standard chatRoom407Alfa.
-+ 2. Encrypt login parameters.
-- 3. Search client by five letters.
-- 4.  
+1. **Hub communication** for standard `chatRoom407Alfa`.
+2. **Encrypt login parameters** for secure authentication.
+3. **Search client by five letters**.
+4. (Feature to be defined)
 
-##### Communication standard chatRoom407Alfa 
+##### Communication Standard for `chatRoom407Alfa`
 
---search
-request
-    <tb>
+**--search request:**  
+`<tb>` ...
 
 ###### Done:
-xx.yy.2024 - Build prototype Communication standard chatRoom407Alfa
-xx.yy.2024 - Add enrcryption by libs
-xx.yy.2024 - Add secure login deliveryKey.php (secure against sniffing 'man in the middle')
+- xx.yy.2024: Built prototype for communication standard `chatRoom407Alfa`.
+- xx.yy.2024: Added encryption via external libraries.
+- xx.yy.2024: Secured login with `deliveryKey.php` (protection against man-in-the-middle attacks).
 
 ####### Open:
-1. Do session login cleaner. (Theard to clean not used session key to keep login)
-2. Make documentation about stanadrd comunnication chatRoom407Alfa.
-3. Make Validate date.
-
+1. Implement session login cleaner (thread to clean unused session keys for secure login).
+2. Create documentation for the communication standard `chatRoom407Alfa`.
+3. Make implementation date validation.
