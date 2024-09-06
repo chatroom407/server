@@ -164,8 +164,6 @@ class WebSocketServer implements MessageComponentInterface {
         $validateMsg = new ValidateMsg();
         $validator = new ValidateMsg();
 
-        $msg = "<tb>Przykładowa wiadomość</tb>";
-
         if ($validator->validateLength($msg, 1024)) {
             // Send back lenght err
         } else {
