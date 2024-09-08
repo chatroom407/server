@@ -44,8 +44,23 @@ function startServer($port, $pidFile) {
     $server->run();
 }
 
+echo "AAAA";
 if (file_exists($pidFile)) {
+    /*
+    if( function_exists('osdep_findProcess') ){
+        $pid = osdep_findProcess("serverHttp.php");
+        if ($pid) {
+            echo "PID procesu serverHttp.php: $pid\n";
+        } else {
+            echo "Nie znaleziono procesu serverHttp.php\n";
+        }
+    }else{
+        
+    }*/
+    
     $pid = (int)file_get_contents($pidFile);
+
+    echo var_dump($pid);
 
     if($pid != 0){
         if (isProcessRunning($pid)) {
@@ -53,9 +68,11 @@ if (file_exists($pidFile)) {
             echo "Stopping existing process with PID $pid...\n";
             osdep_KillProcess ($pid); 
             sleep(1); 
+        }else{
+            echo "Proccess not running<br>";
         }
 
-        unlink($pidFile); 
+        //unlink($pidFile); 
     }
 }
 

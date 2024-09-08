@@ -23,3 +23,10 @@ git pull origin main
 git add .
 git commit -m "Some error msg"
 git push -u origin main
+
+git fetch origin
+git pull origin main
+
+git add .
+git commit -m "Reorganize files and test server on posix"
+git push -u origin main
