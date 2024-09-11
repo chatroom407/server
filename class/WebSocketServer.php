@@ -123,6 +123,18 @@ class WebSocketServer implements MessageComponentInterface {
         }
 
         echo "Connection {$conn->resourceId} has disconnected.\n";
+
+        $i = 0;
+        foreach($this->connArr as $c){
+            if( $c[0] == $conn ){
+                echo "CONN IS UNSET !!!!!!!!!!!</br>";
+                unset( $this->connArr[$i] );
+            }
+            $i++;
+        }
+        foreach($this->connArr as $c){
+            echo $c[1] . "</br>";
+        }
     }
 
     public function onError(ConnectionInterface $conn, \Exception $e) {
@@ -219,10 +231,22 @@ class WebSocketServer implements MessageComponentInterface {
                 $pls .= "<mid>". $myId ."</mid>";
                 $pls .= "</tb>";
                 $this->sendMessageToClient($clientId, $pls);
+                echo "<pre>SERVER:<code>";
+                echo htmlspecialchars( $this->formatXmlData($pls) ); 
+                echo "</code></pre>";
                 break;
 
             case "key":
-                $this->sendMessageToClient($myId, $msg);
+                try{
+                    $this->sendMessageToClient($clientId, $msg);
+                    #$this->sendMessageToClient($myId, $msg);
+                }catch(Exception $e){
+                    echo $e;
+                }
+
+                echo "<pre>SERVER:<code>";
+                echo htmlspecialchars( $this->formatXmlData($msg) ); 
+                echo "</code></pre>";
                 break;
 
             case "clients":
