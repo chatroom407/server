@@ -92,12 +92,39 @@ class WebSocketServer implements MessageComponentInterface {
             unlink($session);
         }
 
+        if(empty($decryptedClientLogin)){
+            $response = "<tb>";
+            $response .= "<instance>you</instance>";
+            $response .= "<id>Decrypt Err</id>";
+            $response .= "</tb>";
+            $conn->send($response);
+            $conn->close();
+            return;
+        }
+        echo "Decrypted result: " . $decryptedClientLogin . "</br>";
 
         foreach ($this->clients as $client) {
             if( strtolower((trim($client->clientId))) == strtolower(trim($decryptedClientLogin)) ){
+                $response = "<tb>";
+                $response .= "<instance>you</instance>";
+                $response .= "<id>Client Exist</id>";
+                $response .= "</tb>";
+                $conn->send($response);
                 $conn->close();
                 return;
             }            
+        }
+
+        foreach($this->connArr as $connEl){
+            if( strtolower((trim($connEl[1]))) == strtolower(trim($decryptedClientLogin)) ){
+                $response = "<tb>";
+                $response .= "<instance>you</instance>";
+                $response .= "<id>ConnArr double exists</id>";
+                $response .= "</tb>";
+                $conn->send($response);
+                $conn->close();
+                return;
+            }
         }
 
         if( empty($clientLogin) ){
@@ -108,13 +135,17 @@ class WebSocketServer implements MessageComponentInterface {
             $conn->clientId = $clientId;
         }
 
+        echo "Client connect: " . $clientId . "</br>";
+
         $this->clients->attach($conn);
+
+        array_push($this->connArr, array($conn, $clientId));
+
         $response = "<tb>";
         $response .= "<instance>you</instance>";
         $response .= "<id>" . $clientId . "</id>";
         $response .= "</tb>";
         $conn->send($response);
-        array_push($this->connArr, array($conn, $clientId));
     }
 
     public function onClose(ConnectionInterface $conn) {
@@ -122,18 +153,30 @@ class WebSocketServer implements MessageComponentInterface {
             $this->clients->detach($conn);
         }
 
-        echo "Connection {$conn->resourceId} has disconnected.\n";
+        echo "Connection {$conn->resourceId} has disconnected.\n</br>";
 
         $i = 0;
         foreach($this->connArr as $c){
             if( $c[0] == $conn ){
-                echo "CONN IS UNSET !!!!!!!!!!!</br>";
-                unset( $this->connArr[$i] );
+                //Not optimal !!!
+                foreach($this->connArr as $ca){
+                    if($ca[1] == $this->connArr[$i][1]){
+                        unset( $this->connArr[$i][0]);
+                        unset( $this->connArr[$i][1]);
+                        unset( $this->connArr[$i]);
+                    }
+                }
+
+                unset( $this->connArr[$i][0] );
+                unset( $this->connArr[$i][1] );
+                unset( $this->connArr[$i]);                
+                echo "Connection is unset</br>";                
             }
             $i++;
         }
+        
         foreach($this->connArr as $c){
-            echo $c[1] . "</br>";
+            echo "el: " . $c[1] . "</br>";
         }
     }
 

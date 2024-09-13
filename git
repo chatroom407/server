@@ -34,3 +34,7 @@ git push -u origin main
 git add .
 git commit -m "[Bug]: Relogin, null"
 git push -u origin main
+
+git add .
+git commit -m "Try better clean users after conn"
+git push -u origin main
