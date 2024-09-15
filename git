@@ -38,3 +38,7 @@ git push -u origin main
 git add .
 git commit -m "Try better clean users after conn"
 git push -u origin main
+
+git add .
+git commit -m "Remove connArr use clients"
+git push -u origin main
